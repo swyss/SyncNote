@@ -1,6 +1,5 @@
 # src/sync/sync_endpoints.py
 from flask import Blueprint, jsonify, request
-from src.utils.redis_client import redis_client
 from src.crud.task_crud import add_task, get_all_tasks, update_task, delete_task
 from src.crud.reminder_crud import add_reminder, get_all_reminders, delete_reminder
 from src.models.task import Task
@@ -35,22 +34,3 @@ def delete_task_endpoint(index):
     if success:
         return jsonify({"message": "Task deleted successfully"}), 200
     return jsonify({"message": "Task not found"}), 404
-
-@sync_blueprint.route('/reminders', methods=['POST'])
-def create_reminder():
-    data = request.json
-    reminder = Reminder.from_dict(data)
-    add_reminder(redis_client, reminder)
-    return jsonify({"message": "Reminder created successfully"}), 201
-
-@sync_blueprint.route('/reminders', methods=['GET'])
-def list_reminders():
-    reminders = get_all_reminders(redis_client)
-    return jsonify(reminders), 200
-
-@sync_blueprint.route('/reminders/<int:index>', methods=['DELETE'])
-def delete_reminder_endpoint(index):
-    success = delete_reminder(redis_client, index)
-    if success:
-        return jsonify({"message": "Reminder deleted successfully"}), 200
-    return jsonify({"message": "Reminder not found"}), 404
