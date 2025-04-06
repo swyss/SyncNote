@@ -1,16 +1,20 @@
-# src/database/redis_manager.py
 import redis
+import logging
+
+logger = logging.getLogger("SyncNote")
 
 def init_redis(config):
+    """Initialize the Redis client."""
     try:
         client = redis.Redis(
-            host=config["REDIS_HOST"],
-            port=config["REDIS_PORT"],
-            decode_responses=True
+            host=config.get("REDIS_HOST", "localhost"),
+            port=config.get("REDIS_PORT", 6379),
+            db=config.get("REDIS_DB", 0)
         )
-        if client.ping():
-            print("[INFO] Successfully connected to Redis")
+        # Test connection
+        client.ping()
+        logger.info("Redis connection successful.")
         return client
-    except redis.ConnectionError as e:
-        print(f"[ERROR] Redis connection failed: {e}")
+    except Exception as e:
+        logger.error(f"Redis connection failed: {e}")
         return None

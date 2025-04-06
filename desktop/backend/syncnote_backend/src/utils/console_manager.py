@@ -1,22 +1,45 @@
 # src/utils/console_manager.py
+from src.core.health_check import check_database
+from src.core.monitoring import get_system_metrics
+from src.core.module_controller import start_module, stop_module, list_modules
+from src.utils.console import print_message
 
-import logging
+def print_console_menu():
+    """Print the enhanced console management menu."""
+    print_message("\n--- SyncNote Console Management ---", "blue")
+    print_message("1. Start a Module", "gray")
+    print_message("2. Stop a Module", "gray")
+    print_message("3. List All Modules", "gray")
+    print_message("4. Health Check", "gray")
+    print_message("5. Show System Metrics", "gray")
+    print_message("0. Exit", "gray")
+    print_message("-----------------------------------", "blue")
 
-logger = logging.getLogger("SyncNote")
+def handle_choice(choice, redis_client):
+    """Handle user input for the console menu."""
+    if choice == "1":
+        module_name = input("Enter module name to start: ")
+        start_module(module_name)
+    elif choice == "2":
+        module_name = input("Enter module name to stop: ")
+        stop_module(module_name)
+    elif choice == "3":
+        list_modules()
+    elif choice == "4":
+        print_message("Performing health check...", "gray")
+        print_message(check_database(), "green")
+    elif choice == "5":
+        print_message("System Metrics:", "blue")
+        print_message(str(get_system_metrics()), "gray")
+    elif choice == "0":
+        print_message("Exiting Console Manager...", "gray")
+        exit(0)
+    else:
+        print_message("Invalid choice. Please try again.", "red")
 
-def display_service_status(service_name, status):
-    """Display the status of a specific service."""
-    status_color = "\033[92m" if status == "running" else "\033[91m"
-    print(f"{status_color}{service_name} is {status}\033[0m")
-
-def display_live_logs():
-    """Display live logs from the system."""
-    try:
-        with open("logs/syncnote.log", "r") as log_file:
-            for line in log_file:
-                print(line.strip())
-    except Exception as e:
-        logger.error(f"Error displaying live logs: {e}")
-
-
-
+def console_manager(redis_client):
+    """Start the enhanced console management loop."""
+    while True:
+        print_console_menu()
+        choice = input("Select an option: ")
+        handle_choice(choice, redis_client)

@@ -1,0 +1,18 @@
+{
+    "SyncService": {
+        "path": "src/sync/sync_endpoints.py",
+        "description": "Handles data synchronization between devices"
+    },
+    "NotificationService": {
+        "path": "src/message/notifier.py",
+        "description": "Manages task and reminder notifications"
+    },
+    "AnalysisService": {
+        "path": "src/analysis/analysis_endpoints.py",
+        "description": "Provides data analysis and statistics"
+    },
+    "ConsoleService": {
+        "path": "src/utils/console_menu.py",
+        "description": "Interactive console management"
+    }
+}

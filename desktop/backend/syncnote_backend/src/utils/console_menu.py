@@ -1,6 +1,6 @@
 # src/utils/console_menu.py
 
-from src.utils.module_manager import start_module, stop_module, list_modules
+from src.utils.module_manager import start_module, stop_module, list_modules, module_status
 from src.analysis.analysis_manager import calculate_completion_rate
 from src.crud.task_crud import get_all_tasks
 import logging
