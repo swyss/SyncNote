@@ -1,21 +1,29 @@
 # src/core/config_manager.py
-
 import json
 import logging
 
-logger = logging.getLogger("SyncNote")
+SYNCNOTE_LOGGER_NAME = "SyncNote"
 
-def load_config(file_path):
-    """Load configuration from a file."""
+
+def read_config_file(file_path, logger=None):
+    """Read configuration from a file."""
+    if logger is None:
+        logger = logging.getLogger(SYNCNOTE_LOGGER_NAME)
     try:
         with open(file_path, "r") as file:
             config = json.load(file)
-            logger.info(f"Configuration loaded from {file_path}")
+            logger.info(f"Configuration successfully loaded from {file_path}")
             return config
     except Exception as e:
-        logger.error(f"Error loading config: {e}")
-        return {}
+        return handle_config_error(file_path, e, logger)
 
-def reload_config(file_path):
+
+def handle_config_error(file_path, error, logger):
+    """Handle errors during the configuration loading process."""
+    logger.error(f"Failed to load configuration from {file_path}: {error}")
+    return {}
+
+
+def reload_config_file(file_path, logger=None):
     """Reload configuration dynamically."""
-    return load_config(file_path)
+    return read_config_file(file_path, logger)
